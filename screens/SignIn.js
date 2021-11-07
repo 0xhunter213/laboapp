@@ -17,7 +17,6 @@ function SignIn ({navigation}) {
                 var userId = user;
                 console.log(userId);
                 presistLogin(user)
-
             }
         ).catch(error => console.log('error'+error))
         }
@@ -56,7 +55,7 @@ function SignIn ({navigation}) {
                 <View style={styles.Input}>
                     <Image source={require('../assets/password-gray.png')} style={[styles.icon,styles.icon1]}/>
                     <TextInput
-                        placeholder="Password"
+                        placeholder="Mot de Passe"
                         secureTextEntry={show}
                         onChangeText={text => setPassword(text)}
                         style={styles.textIn}
@@ -74,7 +73,10 @@ function SignIn ({navigation}) {
                 </View>
             </View>
             <TouchableOpacity style={styles.button} onPress={() => login(email,password)}>
-                <Text style={styles.text}>SignIn</Text>
+                <Text style={styles.text}>s'identifier</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.noaccount} onPress={() => navigation.navigate('Signup')}>
+                <Text>je n'ai pas de compte</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );
@@ -109,7 +111,7 @@ const styles = StyleSheet.create({
         marginTop:15,
     },
     icon:{
-        height:'100%',
+        height:'95%',
         width:'8%',
         marginLeft:10,
         marginRight:10
@@ -137,6 +139,6 @@ const styles = StyleSheet.create({
     text:{
         color:'white',
         fontSize:20
-    }
+    },
 })
 export default SignIn;

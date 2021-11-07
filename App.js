@@ -2,17 +2,18 @@ import React, { useContext,useState ,useEffect} from 'react';
 import { StyleSheet, Text, View ,ActivityIndicator, SectionList} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import SignIn from './screens/SignIn'
 import Home from './screens/Home'
 import AuthContextUser from './AuthContext'
+import map from './screens/map'
 import firebase from './Config'
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import signup from './screens/signup';
 
-
-
-
-export default function App() {
+export default function App(){
   const Stack = createNativeStackNavigator();
   const [currentUser,setCurrentUser] = useState('')
   const [loading,setLoading] = useState(true)
@@ -51,17 +52,36 @@ export default function App() {
   }
   console.log('loading:'+loading)
   console.log('test user'+JSON.stringify(currentUser))
+  const Tab = createBottomTabNavigator()
   return (
     <AuthContextUser.Provider value ={{currentUser,setCurrentUser}}>
       <NavigationContainer>
-                        <Stack.Navigator  screenOptions={{headerShown: false}}>
-                            {currentUser!== ''& currentUser != null?(
-                            <Stack.Screen name="Home" component={Home}/>
-                            )
-                            :(
-                            <Stack.Screen name="SignIn" component={SignIn}/>
-                            )}
-        </Stack.Navigator>
+       {currentUser!== ''& currentUser != null?(
+         <Tab.Navigator  screenOptions={({route})=>({
+           tabBarIcon:({focused,color,size}) =>{
+             let icon;
+             if(route.name == 'Home'){
+               icon = 'home'
+             }else{
+               icon = 'map'
+             }
+             return <Ionicons name={icon} size={size} color={color} />
+           },
+           tabBarActiveTintColor: '#D01D0E',
+           tabBarInactiveTintColor:'#000',
+           headerShown:false
+         })}>
+           <Tab.Screen name="Home" component={Home}/>
+           <Tab.Screen name="Map" component={map}/>
+         </Tab.Navigator>
+       )
+       :(<>
+         <Stack.Navigator  screenOptions={{headerShown: false}}>
+           <Stack.Screen name="SignIn" component={SignIn}/>
+           <Stack.Screen name="Signup" component={signup}/>
+         </Stack.Navigator>
+       </>
+       )}
       </NavigationContainer>
     </AuthContextUser.Provider>
                     
