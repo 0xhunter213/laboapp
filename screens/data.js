@@ -1,4 +1,6 @@
 import React from 'react';
+import firebase from '../Config'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const data = [
     {
@@ -685,6 +687,64 @@ const data = [
       anly: null,
       prmtrs: null
     }
-]
+];
 
-export default data;
+const Hopitale = [
+  {
+    id:"havdavdfdfg",
+    hopitalName:"hopital 1",
+    bladeNeed:"O+",
+    deadLine:"16/11/2021",
+    coordinate:{
+      latitude: 35.21857615850596, 
+      latitudeDelta: 0.7237343366509563,
+      longitude:-0.6321035811744353,
+      longitudeDelta: 1.123857647180557,
+    
+    }
+  },
+  {
+    id:"asdfjqe;fkeq",
+    hopitalName:"hopital 2",
+    bladeNeed:"A+",
+    deadLine:"20/11/2021",
+    coordinate:{
+      latitude: 35.22067366612605, 
+      latitudeDelta: 0.7237343366509563,
+      longitude: -0.6323143181745019,
+      longitudeDelta: 1.123857647180557,
+    
+    }
+  },
+  {
+    id:"das;fkjds;fja",
+    hopitalName:"hopital 3",
+    bladeNeed:"O+",
+    deadLine:"19/11/2021",
+    coordinate:{
+      latitude: 35.19880954958071, 
+      latitudeDelta: 0.7237343366509563,
+      longitude: -0.6437564041675012,
+      longitudeDelta: 1.123857647180557,
+    
+    }
+  },
+  {
+    id:"dsfj;ajdslkfa",
+    hopitalName:"hopital 4",
+    bladeNeed:"O+",
+    deadLine:"14/11/2021",
+    coordinate:{
+      latitude: 35.18365694990676, 
+      latitudeDelta: 0.7237343366509563,
+      longitude: -0.646292564281424,
+      longitudeDelta: 1.123857647180557,
+    }
+  }
+]
+export {
+  data,
+  Hopitale
+};
+
+

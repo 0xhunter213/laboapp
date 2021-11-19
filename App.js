@@ -16,6 +16,11 @@ import signup from './screens/signup';
 export default function App(){
   const Stack = createNativeStackNavigator();
   const [currentUser,setCurrentUser] = useState('')
+  const [firstName,setFirstname] = useState(null)
+  const [lastName, setLastName] = useState(null)
+  const [email,setEmail] = useState(null)
+  const [phoneNumber,setPhoneNumber] = useState(null) 
+  const [bloodType,setBloodType] = useState(null)
   const [loading,setLoading] = useState(true)
   console.log('App.js is working')
  /* useEffect(() => {
@@ -31,8 +36,8 @@ export default function App(){
         console.log('fetch test result')
         if(result !== null){
           console.log('result does not null')
-          setCurrentUser(JSON.parse(result));
-          console.log('this from async storage'+currentUser)
+          setCurrentUser(result);
+          console.log('this from async storage: '+result.uid)
         }else{
           console.log("result is null");
           setCurrentUser(null);
@@ -50,11 +55,11 @@ export default function App(){
       ></AppLoading>
     );
   }
-  console.log('loading:'+loading)
-  console.log('test user'+JSON.stringify(currentUser))
   const Tab = createBottomTabNavigator()
   return (
-    <AuthContextUser.Provider value ={{currentUser,setCurrentUser}}>
+    <AuthContextUser.Provider value ={{
+      currentUser,
+      setCurrentUser      }}>
       <NavigationContainer>
        {currentUser!== ''& currentUser != null?(
          <Tab.Navigator  screenOptions={({route})=>({

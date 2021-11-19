@@ -1,26 +1,79 @@
 import React ,{useState}from 'react';
-import {SafeAreaView, Text, TextInput,StyleSheet, Pressable, Image,View, TouchableOpacity} from 'react-native'
+import {SafeAreaView, Text, TextInput,StyleSheet, Pressable, Image,View, TouchableOpacity, ScrollView, StatusBar,Picker} from 'react-native'
+import DateTimePicker from '@react-native-community/datetimepicker';
 import firebase from '../Config'
 
 function signup({navigation}) {
-    const [username,setUsername] = useState(null)
+    const [firstName,setFirstname] = useState(null)
+    const [lastName, setLastName] = useState(null)
     const [email,setEmail] = useState(null)
     const [password,setPassword] = useState(null)
+    const [phoneNumber,setPhoneNumber] = useState(null) 
+    const [bloodType,setBloodType] = useState("A+")
     const [show,setShow] = useState(true)
     const [show1,setShow1] = useState(true)
     const [confirm , setConfirm] = useState(false)
     const [error,setError] = useState(false)
     const [errText,setErrText] = useState('')
     const [confPass,setConfPass]= useState(null)
-    const signup = (username,email,password)=>{
+    const [selectItem,setSelectItem] = useState()
+    const signup = (firstName,lastName,email,password,phoneNumber,bloodType)=>{
         firebase.auth().createUserWithEmailAndPassword(email,password).then(
             (CredentialUser) => {
-                console.log(CredentialUser.user)
+                const uid = firebase.auth().currentUser.uid;
+                console.log(uid)
+                /*const uid = "tnfapBxvvagcFueO6PjNpaJUqxv1"*/
+                firebase.firestore().collection("users").doc(uid).set(
+                    {
+                        FirstName:firstName,
+                        LastName:lastName,
+                        phoneNumber:phoneNumber,
+                        BloodType:bloodType,
+
+                    }
+                ).then(
+                    console.log("data was inseted thnx !")
+                ).catch(
+                    error => {
+                        setError(true)
+                        setErrText("server error try again !")
+                    }
+                )
+        }  
+        ).catch(
+            (error) => {
+            setError(true)
+            setErrText("the email has already tokenS")  
+            console.log(error)  
+            }
+        )
+        
+    }
+    const SignUpInfos=  () =>{
+        const uid = firebase.auth().currentUser.uid;
+        console.log(typeof(uid))
+        /*const uid = "tnfapBxvvagcFueO6PjNpaJUqxv1"*/
+        firebase.firestore().collection("users").doc(uid).set(
+            {
+                FirstName:firstName,
+                LastName:lastName,
+                phoneNumber:phoneNumber,
+                BloodType:bloodType,
+
+            }
+        ).then(
+            console.log("data was inseted thnx !")
+        ).catch(
+            error => {
+                setError(true)
+                setErrText("server error try again !")
             }
         )
     }
     return (
         <SafeAreaView style={styles.contianer}>
+        <ScrollView>
+        <View style={styles.contianer}>
         <Image 
             style={styles.images}
             source={require('../assets/logo.png')}
@@ -36,8 +89,32 @@ function signup({navigation}) {
                     source={require('../assets/username.png')}
                 />
                 <TextInput
-                    placeholder="Nom d'utilisateur"
-                    onChangeText={text =>{if(text) setUsername(text)}}
+                    placeholder="Nom"
+                    onChangeText={text =>{if(text) setFirstname(text)}}
+                    style={styles.textIn}
+                >
+                </TextInput>
+            </View>
+            <View style={styles.Input}>
+                <Image 
+                    style={styles.icon}
+                    source={require('../assets/username.png')}
+                />
+                <TextInput
+                    placeholder="Prénom"
+                    onChangeText={text =>{if(text) setLastName(text)}}
+                    style={styles.textIn}
+                >
+                </TextInput>
+            </View>
+            <View style={styles.Input}>
+                <Image 
+                    style={styles.icon}
+                    source={require('../assets/phoneNumber.png')}
+                />
+                <TextInput
+                    placeholder="Numéro de téléphone"
+                    onChangeText={text =>{if(text) setPhoneNumber(text)}}
                     style={styles.textIn}
                 >
                 </TextInput>
@@ -54,6 +131,30 @@ function signup({navigation}) {
                     style={styles.textIn}
                 >
                 </TextInput>
+            </View>
+            <View style={styles.Input}>
+                <Image 
+                    style={styles.icon}
+                    source={require('../assets/bloodType.png')}
+                />
+                <Picker
+                    placeholder="Groupe sanguin"
+                    selectedValue={bloodType}
+                    onValueChange = {
+                        (itemValue, itemIndex) =>{setBloodType(itemValue)}
+                    }
+                    style={[styles.textIn,styles.picker]}
+                >
+                    <Picker.Item label="A+" value="A+" />
+                    <Picker.Item label="B+" value="B+" />
+                    <Picker.Item label="O+" value="O+" />
+                    <Picker.Item label="AB+" value="AB+"/>
+                    <Picker.Item label="A-" value="A-" />
+                    <Picker.Item label="B-" value="B-" />
+                    <Picker.Item label="O-" value="O-" />
+                    <Picker.Item label="AB-" value="AB-"/>
+                   
+                </Picker>
             </View>
             <View style={styles.Input}>
                 <Image source={require('../assets/password-gray.png')} style={[styles.icon,styles.icon1]}/>
@@ -104,11 +205,17 @@ function signup({navigation}) {
                 </View>
             </View>
         </View>
-        <TouchableOpacity style={styles.button} onPress = {() =>{if(email && password && username){
+        <TouchableOpacity style={styles.button} onPress = {() =>{
+        const cond = firstName && lastName && phoneNumber && password && email && bloodType;
+        if(cond){
             if(password ==confPass ){
                 setError(false)
-                signup(username,email,password);
+                try{
+                signup(firstName,lastName,email,password,phoneNumber,bloodType);
                 navigation.navigate('SignIn');
+                }catch(e){
+                    console.log("error is here man !")
+                }
             }else{
                 setConfirm(false)
                 setErrText("confirmer votre mot de passe")
@@ -125,8 +232,9 @@ function signup({navigation}) {
         <TouchableOpacity style={styles.noaccount} onPress={() => navigation.navigate('SignIn')}>
                 <Text>J'ai déjà un compte</Text>
         </TouchableOpacity>
+        </View>
+    </ScrollView>
     </SafeAreaView>
-
     );
 }
 const styles = StyleSheet.create({
@@ -134,7 +242,10 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent:'center',
         alignItems:'center',
-        backgroundColor:'#fff'
+        backgroundColor:'#fff',
+        marginTop:StatusBar.currentHeight,
+        paddingBottom:StatusBar.currentHeight,
+
     },
     images:{
         margin:'3%',
@@ -155,7 +266,7 @@ const styles = StyleSheet.create({
         borderRadius:10,
         paddingTop:10,
         paddingBottom:10,
-        marginTop:15,
+        marginTop:5,
     },
     icon:{
         height:'100%',
@@ -190,6 +301,9 @@ const styles = StyleSheet.create({
     error:{
         fontSize:14,
         color:'red'
+    },
+    picker:{
+        width:'85%'
     }
 })
 export default signup;

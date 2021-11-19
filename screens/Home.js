@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button, View, Text,StyleSheet,FlatList, StatusBar, SafeAreaView, TextInput, Image,TouchableOpacity } from 'react-native';
 import AuthContextUser  from '../AuthContext';
 import firebase from '../Config'
-import data from './data'
+import {data} from './data'
 import MapView from 'react-native-maps';
 
 import { NavigationContainer } from '@react-navigation/native';

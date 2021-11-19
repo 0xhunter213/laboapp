@@ -8,17 +8,40 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function SignIn ({navigation}) {
     const [email,setEmail] = useState(null)
     const [password,setPassword] = useState(null)
-    const {currentUser,setCurrentUser} = useContext(AuthContextUser)
+    const {currentUser,setCurrentUser,firstName,
+        setFirstname,
+        lastName,
+        setLastName,
+        phoneNumber,
+        bloodType,
+        setBloodType,} = useContext(AuthContextUser)
     const [show,setShow] = useState(true)
+    const [error,setError] = useState(false)
+    const [errText,setErrText] = useState('')
     const login = (email, password) => {
         if(email && password){
             firebase.auth().signInWithEmailAndPassword(email,password).then(
             (user)=>{
-                var userId = user;
-                console.log(userId);
                 presistLogin(user)
+                const uid = firebase.auth().currentUser.uid;
+                firebase.firestore().collection('users').doc(uid).get().then(
+                    (doc) => {
+                        if(doc.exists){
+                            AsyncStorage.setItem("Informations",JSON.stringify(doc.data())).then(
+                                console.log("informations set successfully",doc.data())
+                            ).catch(
+                                (error) => {
+                                    console.error("error kho :",error)
+                                }
+                            )
+                        }
+                    }
+                )
             }
-        ).catch(error => console.log('error'+error))
+        ).catch(error => {
+            setError(true)
+            setErrText("les informations d'identification invalides")
+        })
         }
     }
     const presistLogin = async (creds) => {
@@ -38,6 +61,10 @@ function SignIn ({navigation}) {
                 style={styles.images}
                 source={require('../assets/logo.png')}
             ></Image>
+            {error?
+            <Text style={styles.error}>{errText}</Text>
+                :<></>
+            }
             <View style={styles.viewCreds}>
                 <View style={styles.Input}>
                     <Image 
@@ -140,5 +167,9 @@ const styles = StyleSheet.create({
         color:'white',
         fontSize:20
     },
+    error:{
+        fontSize:14,
+        color:'red'
+    }
 })
 export default SignIn;

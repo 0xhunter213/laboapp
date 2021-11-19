@@ -24,7 +24,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.test.centerLab"
+      "package": "com.test.centerLab",
+      "config":{
+        "googleMaps":{
+          "apiKey":"AIzaSyCpLLVv-JbzvhMMsgGR2uhQ8ratlyaZ0a0"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
