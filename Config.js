@@ -1,21 +1,25 @@
+/*
+  connect firebase to expo go app
+*/
+
 import firebase from "firebase/app";
 import 'firebase/auth'
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyA00sqyuqlb1qhk3DwTo3vdXMd9ALl9_DI",
+  apiKey: "",
 
   authDomain: "labo-cf55c.firebaseapp.com",
 
   projectId: "labo-cf55c",
 
-  storageBucket: "labo-cf55c.appspot.com",
+  storageBucket: "",
 
-  messagingSenderId: "673031172684",
+  messagingSenderId: "",
 
-  appId: "1:673031172684:web:3ee45df1fe17447eedbae9",
+  appId: "",
 
-  measurementId: "G-0HYBJFQYF7"
+  measurementId: ""
 
 };
 
